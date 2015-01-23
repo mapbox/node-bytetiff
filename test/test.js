@@ -25,7 +25,7 @@ tape('scale', function(assert) {
       var ctrlData = band.pixels.read(0, 0, 100, 100);
       
       var dstband = dst.bands.get(bidx);
-      dstData = dstband.pixels.read(0, 0, 100, 100);
+      var dstData = dstband.pixels.read(0, 0, 100, 100);
       
       for (var i = 0; i < 100 * 100; i += 1) {
         assert.equal(ctrlData[i], dstData[i]);
