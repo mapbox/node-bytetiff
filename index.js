@@ -15,9 +15,6 @@ function scale(srcpath, dstpath, callback) {
   var geoTransform = src.geoTransform;
   var srs = src.srs.clone();
   
-  console.log(geoTransform);
-  console.log(srs);
-  
   var dst = gdal.open(dstpath, mode='w', driver, x_size=width, y_size=height, band_count=count, data_type=gdal.GDT_Byte);
   dst.geoTransform = geoTransform;
   dst.srs = srs;
@@ -33,7 +30,7 @@ function scale(srcpath, dstpath, callback) {
     var scaled = new Uint8Array(data.length);
   
     for (var i = 0; i < width * height; i += 1) {
-      var pix = ~~(255 * (data[i] - dmin ) / dmax);
+      var pix = ~~(255 * (data[i] - dmin ) / dmax + 0.5);
       scaled[i] = pix;
     }
   
