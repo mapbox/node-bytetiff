@@ -12,8 +12,15 @@ function scale(srcpath, dstpath, callback) {
   var height = src.rasterSize.y;
   var count = src.bands.count();
   var driver = src.driver.description;
+  var geoTransform = src.geoTransform;
+  var srs = src.srs.clone();
+  
+  console.log(geoTransform);
+  console.log(srs);
   
   var dst = gdal.open(dstpath, mode='w', driver, x_size=width, y_size=height, band_count=count, data_type=gdal.GDT_Byte);
+  dst.geoTransform = geoTransform;
+  dst.srs = srs;
 
   // TODO: Define based on data type
   var dmin = 0;
