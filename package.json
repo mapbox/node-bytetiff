@@ -5,7 +5,10 @@
   "main": "index.js",
   "author": "Mapbox (https://www.mapbox.com)",
   "dependencies": {
-    "gdal": "^0.4.1"
+    "gdal": "^0.4.1",
+    "geo-pixel-stream": "^0.1.1",
+    "queue-async": "^1.0.7",
+    "underscore": "^1.7.0"
   },
   "engines": {
     "node": "0.10.x"

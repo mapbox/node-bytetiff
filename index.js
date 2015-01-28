@@ -1,43 +1,36 @@
-var gdal = require('gdal');
+var pixels = require('geo-pixel-stream'),
+    queue = require('queue-async'),
+    _ = require('underscore');
 
 module.exports = {};
 module.exports.scale = scale;
 
-
 function scale(srcpath, dstpath, callback) {
-  
-  var src = gdal.open(srcpath);
+  var readers = pixels.createReadStreams(srcpath),
+      metadata = _(readers[0].metadata).extend({ type: 'Byte' }),
+      writers = pixels.createWriteStreams(dstpath, metadata),
+      q = queue(1);
 
-  var width = src.rasterSize.x;
-  var height = src.rasterSize.y;
-  var count = src.bands.count();
-  var driver = src.driver.description;
-  var geoTransform = src.geoTransform;
-  var srs = src.srs.clone();
-  
-  var dst = gdal.open(dstpath, mode='w', driver, x_size=width, y_size=height, band_count=count, data_type=gdal.GDT_Byte);
-  dst.geoTransform = geoTransform;
-  dst.srs = srs;
+  function to8bit(data, done) {
+    // TODO: Define based on data type
+    var i, dmin = 0, dmax = 65535,
+        scaled = new Uint8Array(data.length);
 
-  // TODO: Define based on data type
-  var dmin = 0;
-  var dmax = 65535;
-
-  src.bands.forEach(function(band) {
-    var bidx = band.id;
-  
-    var data = band.pixels.read(0, 0, width, height);
-    var scaled = new Uint8Array(data.length);
-  
-    for (var i = 0; i < width * height; i += 1) {
-      var pix = ~~(255 * (data[i] - dmin ) / dmax + 0.5);
-      scaled[i] = pix;
+    for (i = 0; i < data.length; i++) {
+      scaled[i] = ~~(255 * (data[i] - dmin) / dmax + 0.5);
     }
-  
-    var dstband = dst.bands.get(bidx);
-    dstband.pixels.write(0, 0, width, height, scaled);
-    dst.flush();
+
+    done(null, scaled);
+  }
+
+  readers.forEach(function(inputBand, i) {
+    q.defer(function(next) {
+      inputBand
+        .pipe(pixels.createTransformStream(to8bit))
+        .pipe(writers[i])
+        .on('finish', next);
+    });
   });
-  
-  return callback(null);
+
+  q.await(callback);
 }
