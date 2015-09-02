@@ -6,7 +6,7 @@
   "author": "Mapbox (https://www.mapbox.com)",
   "dependencies": {
     "gdal": "~0.7.0",
-    "geo-pixel-stream": "~0.1.2",
+    "geo-pixel-stream": "~0.2.0",
     "queue-async": "^1.0.7",
     "underscore": "^1.7.0"
   },
