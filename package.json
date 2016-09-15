@@ -5,13 +5,10 @@
   "main": "index.js",
   "author": "Mapbox (https://www.mapbox.com)",
   "dependencies": {
-    "gdal": "~0.8.0",
-    "geo-pixel-stream": "~0.3.0",
+    "gdal": "~0.9.3",
+    "geo-pixel-stream": "https://github.com/mapbox/geo-pixel-stream/tarball/tag-fiesta",
     "queue-async": "^1.0.7",
     "underscore": "^1.7.0"
-  },
-  "engines": {
-    "node": "0.10.x"
   },
   "devDependencies": {
     "tape": "3.0.x"
