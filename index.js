@@ -1,4 +1,4 @@
-var pixels = require('geo-pixel-stream'),
+var pixels = require('@mapbox/geo-pixel-stream'),
     queue = require('queue-async'),
     _ = require('underscore');
 
